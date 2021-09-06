@@ -1,17 +1,17 @@
-import React from "react";
-import utils from "../../utils/utils";
-import ApiService from "../../services/api-service";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import openSocket from "socket.io-client";
-import config from "../../config.js";
-import xss from "xss";
+import React from 'react';
+import utils from '../../utils/utils';
+import ApiService from '../../services/api-service';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import openSocket from 'socket.io-client';
+import config from '../../config.js';
+import xss from 'xss';
 
-import "./Project.css";
+import './Project.css';
 
-import Category from "../Category/Category.js";
-import AddButton from "../AddButton/AddButton";
-import ProjectHeader from "../ProjectHeader/ProjectHeader";
-import Announcement from "../Announcement/Announcement";
+import Category from '../Category/Category.js';
+import AddButton from '../AddButton/AddButton';
+import ProjectHeader from '../ProjectHeader/ProjectHeader';
+import Announcement from '../Announcement/Announcement';
 
 /* I took the approach of updating the component state first, and then making the
 API call to update the server database. This keeps the app highly responsive and
@@ -23,7 +23,7 @@ export default class Project extends React.Component {
     super(props);
     this.state = {
       categories: [],
-      color: "gray",
+      color: 'gray',
       projectLoaded: false,
       projectId: null,
       socket: null,
@@ -35,18 +35,18 @@ export default class Project extends React.Component {
     const uuid = this.props.route.match.params.project_id;
     let newState;
 
-    const socket = openSocket(config.API_ENDPOINT + "/" + uuid);
-    socket.on("update", (categories) => {
+    const socket = openSocket(config.API_ENDPOINT + '/' + uuid);
+    socket.on('update', (categories) => {
       this.setState({ categories });
     });
-    socket.on("connection", () => {
-      this.setState({ announcement: "A user connected 👋" });
+    socket.on('connection', () => {
+      this.setState({ announcement: 'A user connected 👋' });
       setTimeout(() => {
         this.setState({ announcement: null });
       }, 3000);
     });
-    socket.on("disconnect", () => {
-      this.setState({ announcement: "A user disconnected 🚪" });
+    socket.on('disconnect', () => {
+      this.setState({ announcement: 'A user disconnected 🚪' });
       setTimeout(() => {
         this.setState({ announcement: null });
       }, 3000);
@@ -56,7 +56,7 @@ export default class Project extends React.Component {
     ApiService.getProjectObject(uuid)
       .then((data) => {
         if (!data) {
-          return this.setState({ error: "No project found" });
+          return this.setState({ error: 'No project found' });
         }
         newState = data;
 
@@ -64,26 +64,26 @@ export default class Project extends React.Component {
         newState.projectId = uuid;
         this.setState(newState);
 
-        const storedColor = window.localStorage.getItem(uuid + "-color");
+        const storedColor = window.localStorage.getItem(uuid + '-color');
         if (storedColor) {
           this.setState({ color: storedColor });
         }
       })
       .catch((err) => {
-        this.setState({ error: "Failed to fetch project" });
+        this.setState({ error: 'Failed to fetch project' });
         console.log(err);
       });
   }
 
   componentDidUpdate() {
     if (this.state.showAddForm) {
-      const input = document.getElementById("newCategoryName");
+      const input = document.getElementById('newCategoryName');
       input.focus();
     }
   }
 
-  createCategory = (newCategoryTitle = "") => {
-    if (newCategoryTitle === "") {
+  createCategory = (newCategoryTitle = '') => {
+    if (newCategoryTitle === '') {
       return;
     } // Disallow empty category titles
 
@@ -100,7 +100,7 @@ export default class Project extends React.Component {
     // Set up a new category object to avoid mutating the one in our state
     // Change to a string so we aren't passing an array into our database
     const apiCategory = { ...newCategory };
-    apiCategory.tasks = "";
+    apiCategory.tasks = '';
     apiCategory.project_id = this.state.id;
 
     // Send the new category to the server to be stored in the database
@@ -108,7 +108,7 @@ export default class Project extends React.Component {
       console.log(`Failed to POST category to server: ${error}`);
     });
 
-    this.state.socket && this.state.socket.emit("update", newState.categories);
+    this.state.socket && this.state.socket.emit('update', newState.categories);
   };
 
   deleteCategory = (categoryIndex) => {
@@ -119,7 +119,7 @@ export default class Project extends React.Component {
     newCategories.splice(categoryIndex, 1);
     this.setState({ categories: newCategories });
 
-    this.state.socket.emit("update", newCategories);
+    this.state.socket.emit('update', newCategories);
 
     const toReIndex = this.state.categories[categoryIndex]
       ? this.state.categories
@@ -141,7 +141,7 @@ export default class Project extends React.Component {
       index: newTaskIndex,
       tags: [],
       notes: [],
-      color: "blue",
+      color: 'blue',
     };
 
     const newCategories = [...this.state.categories];
@@ -149,15 +149,15 @@ export default class Project extends React.Component {
 
     this.setState({ categories: newCategories });
 
-    this.state.socket.emit("update", newCategories);
+    this.state.socket.emit('update', newCategories);
 
     // Optimistically update the server
     ApiService.postTask(newTask).catch((err) => this.setState({ error: err }));
   };
 
   deleteTask = (categoryIndex, taskIndex) => {
-    const task_uuid = this.state.categories[categoryIndex].tasks[taskIndex]
-      .uuid;
+    const task_uuid =
+      this.state.categories[categoryIndex].tasks[taskIndex].uuid;
     const newCategories = [...this.state.categories];
     let newTasks = newCategories[categoryIndex].tasks;
 
@@ -171,7 +171,7 @@ export default class Project extends React.Component {
 
     this.setState({ categories: newCategories });
 
-    this.state.socket.emit("update", newCategories);
+    this.state.socket.emit('update', newCategories);
 
     // Pass the array of tasks to reIndex to our API
     const toReIndex = newTasks;
@@ -186,7 +186,7 @@ export default class Project extends React.Component {
     task.tags.push(newTag);
 
     this.setState({ categories: newCategories });
-    this.state.socket.emit("update", newCategories);
+    this.state.socket.emit('update', newCategories);
     ApiService.patchTask(task.uuid, { tags: [...task.tags] });
   };
 
@@ -197,7 +197,7 @@ export default class Project extends React.Component {
     task.tags.splice(tagIndex, 1);
 
     this.setState({ categories: newCategories });
-    this.state.socket.emit("update", newCategories);
+    this.state.socket.emit('update', newCategories);
     ApiService.patchTask(task.uuid, { tags: [...task.tags] });
   };
 
@@ -209,7 +209,7 @@ export default class Project extends React.Component {
     task.notes.push(newNote);
 
     this.setState({ categories: newCategories });
-    this.state.socket.emit("update", newCategories);
+    this.state.socket.emit('update', newCategories);
     ApiService.patchTask(task.uuid, { notes: [...task.notes] });
   };
 
@@ -220,7 +220,7 @@ export default class Project extends React.Component {
     task.notes.splice(noteIndex, 1);
 
     this.setState({ categories: newCategories });
-    this.state.socket.emit("update", newCategories);
+    this.state.socket.emit('update', newCategories);
     ApiService.patchTask(task.uuid, { notes: [...task.notes] });
   };
 
@@ -234,7 +234,6 @@ export default class Project extends React.Component {
     this.setState({
       color,
     });
-    window.localStorage.setItem(`${this.state.projectId}-color`, color);
   };
 
   onDragEnd = ({ source, destination, type }) => {
@@ -246,7 +245,7 @@ export default class Project extends React.Component {
       return;
     }
 
-    if (type === "task") {
+    if (type === 'task') {
       const newCategories = [...this.state.categories];
       const fromIndex = source.index;
       const toIndex = destination.index;
@@ -274,7 +273,7 @@ export default class Project extends React.Component {
 
       // Optimistically Update the client state
       this.setState({ categories: newCategories });
-      this.state.socket.emit("update", newCategories);
+      this.state.socket.emit('update', newCategories);
 
       const toReIndex = [
         { ...newCategories[sourceCategoryIndex] },
@@ -282,7 +281,7 @@ export default class Project extends React.Component {
       ];
 
       ApiService.patchTask(task.uuid, task, toReIndex);
-    } else if (type === "category") {
+    } else if (type === 'category') {
       let newCategories = [...this.state.categories];
       const fromIndex = source.index;
       const toIndex = destination.index;
@@ -295,7 +294,7 @@ export default class Project extends React.Component {
 
       // Optimistically Update the client state
       this.setState({ categories: newCategories });
-      this.state.socket.emit("update", newCategories);
+      this.state.socket.emit('update', newCategories);
 
       const toReIndex = newCategories.map(({ uuid }) => uuid);
 
@@ -308,7 +307,7 @@ export default class Project extends React.Component {
   render() {
     if (this.state.error) {
       return (
-        <div className="project__error">
+        <div className='project__error'>
           <h2>{this.state.error}</h2>
         </div>
       );
@@ -316,21 +315,21 @@ export default class Project extends React.Component {
 
     if (!this.state.projectLoaded) {
       return (
-        <div className="project__loading">
+        <div className='project__loading'>
           <h2>Fetching your project...</h2>
 
           {/* Spinner generously provided by https://github.com/tobiasahlin/SpinKit under The MIT License */}
-          <div className="spinner">
-            <div className="bounce1"></div>
-            <div className="bounce2"></div>
-            <div className="bounce3"></div>
+          <div className='spinner'>
+            <div className='bounce1'></div>
+            <div className='bounce2'></div>
+            <div className='bounce3'></div>
           </div>
         </div>
       );
     }
 
     return (
-      <section className="project">
+      <section className='project'>
         <ProjectHeader
           handleChangeColor={this.handleChangeColor}
           uuid={this.state.uuid}
@@ -338,7 +337,7 @@ export default class Project extends React.Component {
 
         {/* Error Display */}
         {this.state.error ? (
-          <div className="project__error">
+          <div className='project__error'>
             <h2>{this.state.error}</h2>
           </div>
         ) : null}
@@ -350,13 +349,13 @@ export default class Project extends React.Component {
         {/* Kanban Board */}
         <DragDropContext onDragEnd={this.onDragEnd}>
           <Droppable
-            droppableId="categories"
-            direction="horizontal"
-            type="category"
+            droppableId='categories'
+            direction='horizontal'
+            type='category'
           >
             {(provided) => (
               <div
-                className="project__board"
+                className='project__board'
                 ref={provided.innerRef}
                 {...provided.droppableProps}
               >
@@ -389,7 +388,7 @@ export default class Project extends React.Component {
 
         <AddButton
           onClick={this.toggleShowAddForm}
-          type="category"
+          type='category'
           onSubmit={(newCategoryName) => {
             this.createCategory(newCategoryName);
           }}
@@ -398,8 +397,8 @@ export default class Project extends React.Component {
 
         {/* Display tutorial instruction if no categories have been created yet */}
         {this.state.categories.length < 1 ? (
-          <div className="project__getting-started">
-            <h2 className="getting-started__message">
+          <div className='project__getting-started'>
+            <h2 className='getting-started__message'>
               Create your first category to get started.
             </h2>
           </div>
@@ -408,5 +407,3 @@ export default class Project extends React.Component {
     );
   }
 }
-
-// for each category on this project, render a category component

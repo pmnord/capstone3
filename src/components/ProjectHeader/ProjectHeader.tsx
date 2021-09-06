@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import utils from '../../utils/utils.js';
+import utils from '../../utils/utils';
 
 import './ProjectHeader.css';
 
@@ -14,13 +14,6 @@ const ProjectHeader = (props) => {
     // peach: false,
     // magenta: false,
   });
-
-  useEffect(() => {
-    const storedColor = window.localStorage.getItem(props.uuid + '-color');
-    if (storedColor) {
-      setColorSelected({ [storedColor]: true });
-    }
-  }, [props.uuid]); // The second argument tells useEffect what values to watch and 'hook' onto. If the array is empty it will only run once.
 
   const handleColorOptionClicked = (e) => {
     props.handleChangeColor(e);
