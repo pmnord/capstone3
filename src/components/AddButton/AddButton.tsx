@@ -9,16 +9,18 @@ a type for the content being added,
 and a unique uuid for labeling and setting event listeners */
 
 interface Props {
-  type: string;
-  onSubmit: (arg: any) => void;
-  uuid: string;
-  style: Object;
+  type?: string;
+  onSubmit?: (arg: any) => void;
+  uuid?: string;
+  style?: Object;
+  id?: string;
 }
 export default function AddButton({
   type = 'default',
   onSubmit = () => {},
   uuid = utils.uuid(),
   style,
+  id,
 }: Props) {
   const [showForm, setShowForm] = useState(false);
 
@@ -75,7 +77,7 @@ export default function AddButton({
 
   if (showForm && type !== 'color') {
     return (
-      <div className='AddButton__form-container'>
+      <div className='AddButton__form-container' id={id}>
         <form onSubmit={handleFormSubmit} className='AddButton__form'>
           <label htmlFor={`add--tag--input--${uuid}`} hidden>
             {type} Name
@@ -92,7 +94,7 @@ export default function AddButton({
     );
   } else if (showForm && type === 'color') {
     return (
-      <div className='AddButton__form-container'>
+      <div className='AddButton__form-container' id={id}>
         <ColorPicker />
       </div>
     );
@@ -102,6 +104,7 @@ export default function AddButton({
         onClick={() => setShowForm(true)}
         className='AddButton__btn'
         style={style}
+        id={id}
       >
         {(() => {
           switch (type) {

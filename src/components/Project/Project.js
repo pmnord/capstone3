@@ -8,7 +8,7 @@ import xss from 'xss';
 
 import './Project.css';
 
-import Category from '../Category/Category.js';
+import Category from '../Category/Category';
 import AddButton from '../AddButton/AddButton';
 import ProjectHeader from '../ProjectHeader/ProjectHeader';
 import Announcement from '../Announcement/Announcement';
