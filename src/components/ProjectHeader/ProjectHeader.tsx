@@ -1,11 +1,11 @@
-import React, { ChangeEvent, MouseEventHandler, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import utils from '../../utils/utils';
 
 import './ProjectHeader.css';
 
 interface Props {
-  handleChangeColor: (e: MouseEvent) => void;
+  handleChangeColor: (e: React.MouseEvent<HTMLInputElement>) => void;
 }
 
 const falsedColors: Record<string, boolean> = {
@@ -24,7 +24,11 @@ const ProjectHeader = ({ handleChangeColor }: Props) => {
     gray: true,
   });
 
-  const handleColorOptionClicked = (event: MouseEvent) => {
+  const handleColorOptionClicked = (
+    event: React.MouseEvent<HTMLInputElement>
+  ) => {
+    event.stopPropagation();
+
     handleChangeColor(event);
 
     const color: string = (event.target as HTMLInputElement).value || 'gray';
@@ -95,7 +99,7 @@ const ProjectHeader = ({ handleChangeColor }: Props) => {
                   name='color'
                   value='gray'
                   defaultChecked={colorSelected.gray}
-                  onClick={(_el: HTMLInputElement, e: MouseEvent) =>
+                  onClick={(e: React.MouseEvent<HTMLInputElement>) =>
                     handleColorOptionClicked(e)
                   }
                   className='toolbar__color-option toolbar__color-option--gray'
@@ -108,7 +112,7 @@ const ProjectHeader = ({ handleChangeColor }: Props) => {
                   name='color'
                   value='blue'
                   defaultChecked={colorSelected.blue}
-                  onClick={(_el: HTMLInputElement, e: MouseEvent) =>
+                  onClick={(e: React.MouseEvent<HTMLInputElement>) =>
                     handleColorOptionClicked(e)
                   }
                   className='toolbar__color-option toolbar__color-option--blue'
@@ -121,7 +125,7 @@ const ProjectHeader = ({ handleChangeColor }: Props) => {
                   name='color'
                   value='green'
                   defaultChecked={colorSelected.green}
-                  onClick={(_el: HTMLInputElement, e: MouseEvent) =>
+                  onClick={(e: React.MouseEvent<HTMLInputElement>) =>
                     handleColorOptionClicked(e)
                   }
                   className='toolbar__color-option toolbar__color-option--green'
@@ -134,7 +138,7 @@ const ProjectHeader = ({ handleChangeColor }: Props) => {
                   name='color'
                   value='cyan'
                   defaultChecked={colorSelected.cyan}
-                  onClick={(_el: HTMLInputElement, e: MouseEvent) =>
+                  onClick={(e: React.MouseEvent<HTMLInputElement>) =>
                     handleColorOptionClicked(e)
                   }
                   className='toolbar__color-option toolbar__color-option--cyan'
@@ -147,7 +151,7 @@ const ProjectHeader = ({ handleChangeColor }: Props) => {
                   name='color'
                   value='peach'
                   defaultChecked={colorSelected.peach}
-                  onClick={(_el: HTMLInputElement, e: MouseEvent) =>
+                  onClick={(e: React.MouseEvent<HTMLInputElement>) =>
                     handleColorOptionClicked(e)
                   }
                   className='toolbar__color-option toolbar__color-option--peach'
@@ -160,7 +164,7 @@ const ProjectHeader = ({ handleChangeColor }: Props) => {
                   name='color'
                   value='magenta'
                   defaultChecked={colorSelected.magenta}
-                  onClick={(_el: HTMLInputElement, e: MouseEvent) =>
+                  onClick={(e: React.MouseEvent<HTMLInputElement>) =>
                     handleColorOptionClicked(e)
                   }
                   className='toolbar__color-option toolbar__color-option--magenta'
