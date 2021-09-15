@@ -8,37 +8,57 @@ import ColorPicker from '../ColorPicker/ColorPicker.js';
 a type for the content being added, 
 and a unique uuid for labeling and setting event listeners */
 
-export default function AddButton({ type, onSubmit, uuid, style }) {
+interface Props {
+  type: string;
+  onSubmit: (arg: any) => void;
+  uuid: string;
+  style: Object;
+}
+export default function AddButton({
+  type = 'default',
+  onSubmit = () => {},
+  uuid = utils.uuid(),
+  style,
+}: Props) {
   const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
     if (showForm) {
       if (type !== 'color') {
-        document.getElementById(`add--tag--input--${uuid}`).focus();
+        let input: HTMLElement | null = document.getElementById(
+          `add--tag--input--${uuid}`
+        );
+        if (input) input.focus();
       }
 
       const root = document.getElementById('root');
-      root.addEventListener('mousedown', (e) => {
-        const path = e.path || (e.composedPath && e.composedPath()); // event.path is not standardized - this line is required for compatibilty with firefox
 
-        // Prevent the nav from toggling off unless the user clicks outside of the element
-        for (let element of path) {
-          if (element.className === 'AddButton__form') {
-            return;
+      if (root) {
+        root.addEventListener('mousedown', (e) => {
+          const path = e.composedPath();
+
+          // const path = e?.path || (e.composedPath && e.composedPath()); // old solution
+          // event.path is not standardized - this line is required for compatibilty with firefox
+
+          // Prevent the nav from toggling off unless the user clicks outside of the element
+          for (let element of path) {
+            if ((element as HTMLElement).className === 'AddButton__form') {
+              return;
+            }
           }
-        }
 
-        if (showForm) {
-          setShowForm(false);
-        }
-      });
+          if (showForm) {
+            setShowForm(false);
+          }
+        });
+      }
     }
   }, [showForm, uuid, type]);
 
-  function handleFormSubmit(e) {
+  function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const input = e.target[`add--tag--input--${uuid}`];
+    const input = (e.target as HTMLFormElement)[`add--tag--input--${uuid}`];
 
     // Don't create empty tags
     if (input.value === '') {
@@ -180,9 +200,3 @@ export default function AddButton({ type, onSubmit, uuid, style }) {
     );
   }
 }
-
-AddButton.defaultProps = {
-  onSubmit: () => {},
-  uuid: utils.uuid(),
-  type: 'default',
-};
