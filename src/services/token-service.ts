@@ -1,7 +1,7 @@
 import config from '../config';
 
 const TokenService = {
-  setToken(token) {
+  setToken(token: string) {
     return window.localStorage.setItem(`${config.TOKEN_KEY}`, token);
   },
   getToken() {

@@ -1,8 +1,11 @@
 import React from 'react';
-
 import './Announcement.css';
 
-const Announcement = ({ message }) => {
+interface Props {
+  message: string;
+}
+
+const Announcement = ({ message }: Props) => {
   return <div className='Announcement'>{message}</div>;
 };
 

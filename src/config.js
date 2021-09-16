@@ -4,4 +4,5 @@ export default {
       ? `http://localhost:8000/api`
       : process.env.REACT_APP_WEDO_SERVER,
   API_KEY: process.env.REACT_APP_WEDO_API_KEY,
+  TOKEN_KEY: process.env.TOKEN_KEY || 'wedo-token',
 };

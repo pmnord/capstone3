@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-import Landing from './components/Landing/Landing.js';
+import Landing from './components/Landing/Landing';
 import Project from './components/Project/Project';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 
