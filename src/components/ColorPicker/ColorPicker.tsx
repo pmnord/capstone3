@@ -5,9 +5,12 @@ import './ColorPicker.css';
 const ColorPicker = () => {
   const handleColorOptionClicked = () => {};
 
+  /* 
+    These radio buttons are designed to preserve accessibility while providing styling
+  */
+
   return (
     <div className='ColorPicker'>
-      {/* Radio buttons designed to preserve accessibility and also provide styling */}
       <fieldset className='ColorPicker__fieldset'>
         <legend aria-label='App Color Picker'></legend>
         <div className='ColorPicker__color-grid'>

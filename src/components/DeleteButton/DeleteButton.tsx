@@ -1,46 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import './Deletebutton.css';
 
-function DeleteButton({ thingDeleted, deleteCallback, hue, id }) {
+interface Props {
+  deleteCallback: () => void;
+  id: string;
+}
+
+function DeleteButton({ deleteCallback = () => {}, id }: Props) {
   const [showConfirmBox, setShowConfirmBox] = useState(false);
 
   // Toggles display of confirmation box on clicking out
   useEffect(() => {
     if (showConfirmBox) {
-      document.getElementById(`${id}-delete-btn`).focus();
+      const input = document.getElementById(`${id}-delete-btn`);
 
-      const handleClickout = (e) => {
+      if (input) input.focus();
+
+      const handleClickout = (e: MouseEvent) => {
         // Prevent the nav from toggling off unless the user clicks outside of the element
 
         // Firefox does not have a .path property on mouseClick events
-        const path = e.path || (e.composedPath && e.composedPath());
+        const path = e.composedPath();
 
+        // TODO: test this, the confirm box should stay open if a user clicks within it
         for (let element of path) {
-          if (element.className === 'DeleteButton__confirm-box') return;
+          if (
+            (element as HTMLElement).className === 'DeleteButton__confirm-box'
+          )
+            return;
         }
 
         if (showConfirmBox) setShowConfirmBox(false);
       };
-      const root = document.getElementById('root');
-      const clickoutListener = root.addEventListener(
-        'mousedown',
-        handleClickout
-      );
 
-      return () => root.removeEventListener('mousedown', clickoutListener);
+      const root = document.getElementById('root');
+
+      if (root) {
+        root.addEventListener('mousedown', handleClickout);
+
+        return () => root.removeEventListener('mousedown', handleClickout);
+      }
     }
   }, [showConfirmBox, id]);
 
   const handleDelete = () => {
     deleteCallback();
     setShowConfirmBox(false);
+
     return;
   };
 
   return (
     <span className='DeleteButton'>
       <svg
-        tabIndex='0'
+        tabIndex={0}
         onClick={() => setShowConfirmBox(!showConfirmBox)}
         onKeyDown={(e) =>
           e.keyCode === 13 && setShowConfirmBox(!showConfirmBox)
@@ -77,11 +90,5 @@ function DeleteButton({ thingDeleted, deleteCallback, hue, id }) {
     </span>
   );
 }
-
-DeleteButton.defaultProps = {
-  thingDeleted: 'thing',
-  hue: '220',
-  deleteCallback: () => {},
-};
 
 export default DeleteButton;

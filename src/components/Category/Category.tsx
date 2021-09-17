@@ -4,7 +4,7 @@ import { Droppable, Draggable, DraggableProvided } from 'react-beautiful-dnd';
 
 import Task from '../Task/Task';
 import AddButton from '../AddButton/AddButton';
-import DeleteButton from '../DeleteButton/DeleteButton.js';
+import DeleteButton from '../DeleteButton/DeleteButton';
 import { Task as ITask } from '../../types';
 
 interface Props {
@@ -61,8 +61,6 @@ export default function Category({
               {tasks.length === 0 ? (
                 <DeleteButton
                   id={`cat-${index}-delete`}
-                  hue={hue}
-                  thingDeleted='category'
                   deleteCallback={handleDeleteCategory}
                 />
               ) : null}
