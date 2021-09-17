@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import './Task.css';
 import { Draggable } from 'react-beautiful-dnd';
 
-import Tags from '../Tags/Tags.js';
+import Tags from '../Tags/Tags';
 import TaskNotes from '../TaskNotes/TaskNotes';
-import DeleteButton from '../DeleteButton/DeleteButton.js';
+import DeleteButton from '../DeleteButton/DeleteButton';
 import AddButton from '../AddButton/AddButton';
 
 const Task = (props) => {

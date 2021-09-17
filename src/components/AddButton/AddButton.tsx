@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './AddButton.css';
 import utils from '../../utils/utils';
 
-import ColorPicker from '../ColorPicker/ColorPicker.js';
+import ColorPicker from '../ColorPicker/ColorPicker';
 
 /* AddButton expects an onSubmit callback, 
 a type for the content being added, 
