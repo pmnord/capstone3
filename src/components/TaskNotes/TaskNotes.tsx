@@ -1,8 +1,18 @@
 import React from 'react';
-
 import './TaskNotes.css';
 
-const TaskNotes = ({ notes, deleteNote, taskIndex, categoryIndex }) => {
+interface Props {
+  categoryIndex: number;
+  deleteNote: (
+    categoryIndex: number,
+    taskIndex: number,
+    noteIndex: number
+  ) => void;
+  notes: string[];
+  taskIndex: number;
+}
+
+function TaskNotes({ categoryIndex, deleteNote, notes, taskIndex }: Props) {
   return (
     <div className='TaskNotes'>
       <label>Notes</label>
@@ -22,6 +32,6 @@ const TaskNotes = ({ notes, deleteNote, taskIndex, categoryIndex }) => {
       </ul>
     </div>
   );
-};
+}
 
 export default TaskNotes;
