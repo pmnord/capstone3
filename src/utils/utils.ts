@@ -21,28 +21,6 @@ const utils = {
     return outObject;
   },
 
-  copyToClipboard: (node_id: string) => {
-    const targetNode: HTMLElement | null = document.getElementById(node_id);
-    const selection: Selection | null = window.getSelection();
-
-    if (targetNode && selection) {
-      const range = document.createRange();
-      range.selectNode(targetNode);
-
-      selection.removeAllRanges();
-      selection.addRange(range);
-
-      try {
-        // returns true or false depending on success
-        document.execCommand('copy');
-
-        window.getSelection()?.removeAllRanges();
-      } catch (err) {
-        console.log(err);
-      }
-    }
-  },
-
   uuid: (): string => {
     return nanoid();
   },
